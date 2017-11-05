@@ -5,7 +5,15 @@ I spent a long time trying to grasp as many mecanisms as possible (the
 compilation process, linking, inspecting object files, ... ) in order to have 
 a decent understanding of the process, and I learned many things.
 
-This directory is included only as an example.
+This directory is included only as an example:
+
+* The system prints ""Hello, world!" on a black screen and does nothing special.
+
+* The only noteworthy module is `screen` which drives the VGA output and prints
+to the screen.
+
+* This example is so rudimentary that there is no notion of process/task, 
+scheduler, interrupts, time, keyboard/mouse driver whatsoever.
 
 
 ## Comments
@@ -18,3 +26,10 @@ Also, some code is outdated, some parts are undocumented, and some
 functions/variables are still in their original state (not clean at all). 
 
 The code will be revisited gradually to only keep the strict minimum.
+
+
+## License
+
+Unless a used file contains its own copyright/license, these files are licensed
+under the MIT license.
+
