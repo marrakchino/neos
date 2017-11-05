@@ -3,7 +3,8 @@
 This is the most basic example to come up with when developing a kernel.
 I spent a long time trying to grasp as many mecanisms as possible (the 
 compilation process, linking, inspecting object files, ... ) in order to have 
-a decent understanding of the process, and I learned many things.
+a decent understanding of the process, and I learned many things, some of which 
+still need more investigation though.
 
 This directory is included only as an example:
 
@@ -27,6 +28,11 @@ functions/variables are still in their original state (not clean at all).
 
 The code will be revisited gradually to only keep the strict minimum.
 
+## Further reading
+
+* http://wiki.osdev.org/Bare_Bones
+
+* http://dbp-consulting.com/tutorials/debugging/linuxProgramStartup.html
 
 ## License
 
