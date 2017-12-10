@@ -1,6 +1,7 @@
 #ifndef __ASM_WRAPPER_H__
 #define __ASM_WRAPPER_H__
 
+
 static void __inline__ sti(void){
 	__asm__ volatile("sti:::memory");
 }
@@ -21,6 +22,12 @@ static unsigned char __inline__ inb(unsigned short port){
 	unsigned char data;
 	__asm__ volatile("inb %1, %0" : "=a" (data) : "d" (port));
 	return data;
+}
+
+static inline void stosl(void* addr, int data, int count){
+    __asm__ volatile("cld; rep stosl" : "=D" (addr), "=c" (count) :
+                      "0" (addr), "1" (count), "a" (data) :
+                      "memory", "cc");
 }
 
 #endif
