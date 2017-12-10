@@ -69,9 +69,6 @@ entry2:
 	cmpl	$mem_heap_end,%edi
 	jb	0b
 
-	/* Setup the processor tables. */
-	call	cpu_init
-
 	/* To support C++, should run __CTOR_LIST__ just now */
 
 	/* Jumps into the kernel starting code. */
@@ -105,34 +102,12 @@ setup_pgtab:
 	decl	%edx
 	jnz	0b
 
-	/* Enable paging */
-	leal	pgdir,%eax
-	movl	%eax,tss+28
-	movl	%eax,%cr3
-	movl	%cr0,%eax
-	orl	$0x80000000,%eax
-	movl	%eax,%cr0
-	jmp	0f
-0:	movl	$0f,%eax
-	jmp	*%eax
-0:	ret
-
 /* Unimplemented functions.
 You have to implement them it in ".c" files. As these symbols are marked as
 "weak", they will no more be used as soon as you write your implementations.
 */
 	.weak console_putbytes
 console_putbytes:
-	ret
-
-	.weak keyboard_data
-keyboard_data:
-	ret
-
-/* Implement this one only if you want to light LEDs in sync with keyboard's
-state. */
-	.weak kbd_leds
-kbd_leds:
 	ret
 
 	.org	0x1000

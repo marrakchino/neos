@@ -11,6 +11,7 @@ AS = gcc -std=c99
 LD = ld
 QEMU = /usr/bin/qemu-system-i386
 
+# CFLAGS = -m32 -g -gstabs -std=c99 -nostdinc -fno-stack-protector -I.
 CFLAGS = -m32 -Wall -Werror -g -gstabs -std=c99 -nostdinc -fno-stack-protector -I.
 ASFLAGS = -m32 -DASSEMBLER -g -gstabs -I.
 LDFLAGS = -melf_i386

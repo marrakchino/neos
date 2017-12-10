@@ -1,14 +1,17 @@
 #include "screen.h"
 
 #include <inttypes.h>
-#include <cpu.h>
 
-#define BLACK		0x0
-#define WHITE 		0xF 
+#define BLACK		    0x0
+#define WHITE 		    0xF 
 
-#define MAX_LINES	25
-#define MAX_COLUMNS	80
+#define MAX_LINES	    25
+#define MAX_COLUMNS	    80
 #define MEM_VIDEO_ADDR	0xB8000
+
+static void __inline__ outb(unsigned char value, unsigned short port){
+	__asm__ __volatile__("outb %0, %1" : : "a" (value), "Nd" (port));
+}
 
 /* computes and returns a pointer corresponding to the memory address
  * specified by line and column */

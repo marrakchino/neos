@@ -37,9 +37,6 @@ SECTIONS {
 		*(.rodata.cst8)
 		*(.data)
 
-		task_dump_screen = .;
-		*(.task_dump_screen)
-
 		_edata  =  .;
 	}
 
@@ -55,11 +52,6 @@ SECTIONS {
 	/DISCARD/ : {
 		*(.comment)
 	}
-
-	/* The memory map */
-	idt = 0x1000;
-	gdt = 0x10000;
-	tss = 0x20000;
 
 	/* Beginning of kernel memory heap */
 	mem_heap = _end;
