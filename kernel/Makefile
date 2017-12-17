@@ -37,7 +37,7 @@ $(KERNEL): $(LINKER_SCRIPT) $(OBJS)
 clean:
 	$(RM) $(OBJS) $(KERNEL)
 
-run:
+run: $(KERNEL)
 	$(QEMU) $(QEMUOPTS)
 
 .PHONY: tags
