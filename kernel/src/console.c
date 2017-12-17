@@ -21,24 +21,10 @@
 
 static console_state_t console_state;
 
-void init_console(void){
-    set_cursor_position((cursor_position_t) {0, 0});
-    set_colorscheme((colorcheme) COLOR_SCHEME(WHITE, BLACK));
-    clear_console();
-}
-
 static uint16_t* get_pointer_to_address(uint8_t line, uint8_t column){
     if (!VALID_LINE_NUMBER(line) || !VALID_COLUMN_NUMBER(column))
         return NULL;
     return (uint16_t* ) VIDEO_MEMORY_ADDRESS + 2 * (column + line * COLS);
-}
-
-inline void set_colorscheme(colorscheme_t color){
-    console_state.colorscheme = color;
-}
-
-colorscheme_t get_colorscheme(void){
-    return console_state.colorscheme;
 }
 
 static inline void print_char(const uint8_t line, const uint8_t column, const char c){
@@ -47,11 +33,25 @@ static inline void print_char(const uint8_t line, const uint8_t column, const ch
 }
 
 static void clear_console(void){
-    const colorscheme_t white_on_black = COLOR_SCHEME(WHITE, BLACK);
+//     const colorscheme_t white_on_black = COLOR_SCHEME(WHITE, BLACK);
     for (uint8_t i = 0; i < LINES; ++i){
         for (uint8_t j = 0; j < COLS; ++j)
-            print_char(i, j, c);
+            print_char(i, j, ' ');
     }
+}
+
+void init_console(void){
+    set_cursor_position((cursor_position_t) {0, 0});
+    set_colorscheme((colorscheme_t) COLOR_SCHEME(WHITE, BLACK));
+    clear_console();
+}
+
+void set_colorscheme(colorscheme_t color){
+    console_state.colorscheme = color;
+}
+
+colorscheme_t get_colorscheme(void){
+    return console_state.colorscheme;
 }
 
 void scroll(uint8_t lines){
@@ -62,7 +62,7 @@ void scroll(uint8_t lines){
 
 }
 
-inline void set_cursor_position(cursor_position_t position){
+void set_cursor_position(cursor_position_t position){
     if (!VALID_CURSOR(position))
         return;
     else {
@@ -76,7 +76,9 @@ inline void set_cursor_position(cursor_position_t position){
         outb(CRT_DATA_REGISTER_PORT, (new_position & CURSOR_MSB_MASK) >> 8);
 
         /* Update internal state */
-        console_state.cursor = {.x = position.x, .y = position.y};
+//         console_state.cursor = {position.x, position.y};
+        console_state.cursor.x = position.x;
+        console_state.cursor.y = position.y;
     }
 }
 

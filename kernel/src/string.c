@@ -1,4 +1,5 @@
 #include "string.h"
+#include "types.h"
 
 int memcmp(const void* s1, const void* s2, size_t n){
     const unsigned char *c1 = s1, *c2 = s2;
@@ -7,6 +8,13 @@ int memcmp(const void* s1, const void* s2, size_t n){
         if ((res = (int)*c1++ - (int)*c2++) != 0)
             break;
     return res;
+}
+
+void* memset(void* dst, char c, size_t n){
+    volatile char* p = (volatile char* )dst;
+    while (n--)
+        *p++ = c;
+    return dst;
 }
 
 void* memmove(void* dst, const void* src, size_t n){
@@ -28,5 +36,6 @@ size_t strlen(const char* s){
     size_t len = 0;
     while (s[len] != '\0')
         len++;
-    retun len;
+    return len;
 }
+

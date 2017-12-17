@@ -15,12 +15,12 @@ typedef struct {
 
 void init_console(void);
 
-inline void set_colorscheme(colorscheme_t colorscheme);
+void set_colorscheme(colorscheme_t colorscheme);
 colorscheme_t get_colorscheme(void);
 
 void scroll(uint8_t lines);
 
-inline void set_cursor_position(cursor_position_t position);
+void set_cursor_position(cursor_position_t position);
 cursor_position_t get_cursor_position(void);
 
 
