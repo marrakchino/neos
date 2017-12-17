@@ -7,6 +7,7 @@
 set -u
 HERE=$(cd "$(dirname "$0")" && pwd)
 KERNEL_PATH="${HERE}/../"
+license=$(cat scripts/license_header)
 
 for f in $(find ${KERNEL_PATH} -name "*.[h|c|s]"); do
     if ! grep -Fxq "${license}" "${f}"; then
