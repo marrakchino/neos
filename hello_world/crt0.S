@@ -29,27 +29,14 @@
 	/* The entry point must be before the multiboot header. */
 .global entry
 entry:
-	/* Setup the code segment. */
-	jmp	entry2
-
-	/* The multiboot header. */
-	.p2align 2
-0:	.long	0x1BADB002		/* magic number. */
-	.long	0x00010002		/* flags. */
-	.long	-0x1BADB002-0x00010002	/* checksum. */
-	.long	0b
-	.long	_start
-	.long	_edata
-	.long	__bss_end
-	.long	entry
 
 	/*
 	 * This global label is here to realign the debugger on the beginning
 	 * of the code
 	 */
-entry2:
-	movl	%eax,multiboot_magic	/* It can be verified later. */
-	movl	%ebx,multiboot_info	/* It can be used later. */
+/* entry2:*/
+	movl	%ecx,multiboot_magic	/* It can be verified later. */
+	movl	%edx,multiboot_info	/* It can be used later. */
 
 	/* We have to set up a stack. */
     /* This is done by **translating** the initial stack by reserving 
@@ -59,20 +46,18 @@ entry2:
 	addl	$FIRST_STACK_SIZE,%esp 
 	xorl	%ebp,%ebp
 
-	/* Clear the flags. */
-	pushl	$0
-	popfl
-	/* Note that the Interrupt Flag is cleared : interrupts are disabled. */
-
 	/* Blank all uninitialized memory */
 	movl	$_edata,%edi
-	xorl	%eax,%eax
-0:	movl	%eax,(%edi)
-	addl	$4,%edi
-	cmpl	$mem_heap_end,%edi
-	jb	0b
+zeroize:	
+    movl	%eax,(%edi) 
+	xorl	%eax,%eax  /* %eax = 0 */
+	addl	$4,%edi /* edi += 4 */
+	cmpl	$mem_heap_end,%edi /* check if we reached the end (heap_end <= edi) */
+	jb	zeroize /* jump if below */
 
-	/* To support C++, should run __CTOR_LIST__ just now */
+	.p2align 2
+0:	.long   0x1BADB002, 0x00010002, -0x1BADB002-0x00010002, 0b
+    .long   _start,	_edata, __bss_end, entry
 
 	call	kernel_start
 
