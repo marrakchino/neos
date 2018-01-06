@@ -16,26 +16,35 @@ QEMU = /usr/bin/qemu-system-i386
 CFLAGS = -std=c99 -m32 -Wall -Werror -Wformat -Wunused -g -gstabs -nostdinc -fno-stack-protector -fno-builtin -Iinclude
 ASFLAGS = -std=c99 -m32 -DASSEMBLER -g -gstabs -Iinclude
 LDFLAGS = -melf_i386
-QEMUOPTS = -cpu pentium -rtc base=localtime -m 64M -gdb tcp::1234 -kernel $(KERNEL)
 
-.PHONY: all
+.PHONY: all gdb
 all: $(KERNEL)
 
+GDBPORT = $(shell expr `id -u` % 5000 + 25000)
+QEMUOPTS = -cpu pentium -rtc base=localtime -m 64M -gdb tcp::$(GDBPORT) -kernel $(KERNEL)
+
+.gdbinit:
+	touch .gdbinit 
+
 .PHONY: gdb
-gdb:
-	rm -f .gdbinit \
-	# generate a unique GDB port to listen to
-	echo "target remote :$(shell expr `id -u` % 5000 + 25000)" > .gdbinit
+gdb: .gdbinit
+	echo "target remote :$(GDBPORT)" >> .gdbinit
+
+$(OBJDIR):
+	@mkdir -p $@
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	$(CC) $(CFLAGS) -c -o $@ $<
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.S
+	$(AS) $(ASFLAGS) -c -o $@ $<
 
 $(KERNEL): $(LINKER_SCRIPT) $(OBJS) 
 	$(LD) $(LDFLAGS) -T$(LINKER_SCRIPT) $(OBJS) -o $@
 
 .PHONY: clean
 clean:
-	$(RM) $(OBJS) $(KERNEL)
+	$(RM) $(OBJS) $(KERNEL) .gdbinit
 
 run: $(KERNEL)
 	$(QEMU) $(QEMUOPTS)
