@@ -31,7 +31,7 @@ void clear_screen(void)
 	for (uint32_t i_l = 0; i_l < MAX_LINES; i_l++)
 	{
 		for (uint32_t i_c = 0; i_c < MAX_COLUMNS; i_c++)
-			print_char(i_l, i_c, 0, BLACK, WHITE, 0);
+			print_char(i_l, i_c, ' ', BLACK, WHITE, 0);
 	}
 }
 
