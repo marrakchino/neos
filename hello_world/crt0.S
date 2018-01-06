@@ -19,7 +19,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#include "start.h"
+#define FIRST_STACK_SIZE 16384
 
 	.text
 	.comm   first_stack,FIRST_STACK_SIZE,32
@@ -52,8 +52,11 @@ entry2:
 	movl	%ebx,multiboot_info	/* It can be used later. */
 
 	/* We have to set up a stack. */
-	leal	first_stack,%esp
-	addl	$FIRST_STACK_SIZE,%esp
+    /* This is done by **translating** the initial stack by reserving 
+    FIRST_STACK_SIZE bytes (16 kBytes). This means the new stack
+    pointer $esp is equal to its previous value, plus $FIRST_STACK_SIZE */
+	leal	first_stack,%esp 
+	addl	$FIRST_STACK_SIZE,%esp 
 	xorl	%ebp,%ebp
 
 	/* Clear the flags. */
@@ -71,62 +74,8 @@ entry2:
 
 	/* To support C++, should run __CTOR_LIST__ just now */
 
-	/* Jumps into the kernel starting code. */
 	call	kernel_start
 
 	/* This function should never exit. */
 hang:
 	jmp hang
-
-.global setup_pgtab
-setup_pgtab:
-	/* Setup page tables. The first 16M are mapped for kernel only */
-	/* Note that the first page is protected, to catch null pointers */
-	leal	pgtab,%eax
-	xorl	%edi,%edi
-	movl	%edi,(%eax)
-	addl	$4,%eax
-	movl	$4*1024-1,%edx
-	movl	$0x1007,%edi
-0:	movl	%edi,(%eax)
-	addl	$4,%eax
-	addl	$0x1000,%edi
-	decl	%edx
-	jnz	0b
-
-	/* The next 32M are mapped for user and kernel access */
-	movl	$8*1024,%edx
-0:	movl	%edi,(%eax)
-	addl	$4,%eax
-	addl	$0x1000,%edi
-	decl	%edx
-	jnz	0b
-
-/* Unimplemented functions.
-You have to implement them it in ".c" files. As these symbols are marked as
-"weak", they will no more be used as soon as you write your implementations.
-*/
-	.weak console_putbytes
-console_putbytes:
-	ret
-
-	.org	0x1000
-	.global pgdir
-pgdir:
-	.long	0x102003
-	.long	0x103003
-	.long	0x104003
-	.long	0x105003
-	.long	0x106007
-	.long	0x107007
-	.long	0x108007
-	.long	0x109007
-	.long	0x10a007
-	.long	0x10b007
-	.long	0x10c007
-	.long	0x10d007
-	.fill	1012,4,0
-
-	.org	0x2000
-pgtab:
-	.org	0xe000
