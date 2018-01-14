@@ -1,7 +1,9 @@
 #include "screen.h"
+#include "string.h"
 
 void kernel_start(void){
-	init(); 
-	console_putbytes("Hi, there!", 10);
-	for (;;);
+    init(); 
+    char* hello_world = "Hello, World!";
+    console_putbytes(hello_world, strlen(hello_world));
+    for (;;);
 }
