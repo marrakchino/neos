@@ -1,6 +1,5 @@
 #include "console.h"
 #include "keyboard.h"
-#include "header.h"
 
 void start_kernel(void){
 //     cli();
