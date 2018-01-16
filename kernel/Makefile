@@ -30,16 +30,16 @@ QEMUOPTS = -cpu pentium -rtc base=localtime -m 64M -gdb tcp::$(GDBPORT) -kernel 
 gdb: .gdbinit
 	echo "target remote :$(GDBPORT)" >> .gdbinit
 
-$(OBJDIR):
-	@mkdir -p $@
-
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
+	@mkdir -p $(OBJDIR)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.S
+	@mkdir -p $(OBJDIR)
 	$(AS) $(ASFLAGS) -c -o $@ $<
 
 $(KERNEL): $(LINKER_SCRIPT) $(OBJS) 
+	@mkdir -p $(BINDIR)
 	$(LD) $(LDFLAGS) -T$(LINKER_SCRIPT) $(OBJS) -o $@
 
 .PHONY: clean
@@ -51,7 +51,7 @@ run: $(KERNEL)
 
 .PHONY: tags
 tags:
-	ctags $(SRCS)
+	ctags $(SRCS) 
 
 .PHONY: license
 license:
