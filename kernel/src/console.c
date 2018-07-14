@@ -40,7 +40,7 @@ static void clear_console(void){
 
 void init_console(void){
     set_cursor_position((cursor_position_t) {0, 0});
-    set_colorscheme((colorscheme_t) COLOR_SCHEME(WHITE, BLACK));
+    set_colorscheme((colorscheme_t) COLOR_SCHEME(BLACK, WHITE));
     clear_console();
 }
 
